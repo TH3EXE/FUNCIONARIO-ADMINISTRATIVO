@@ -72,20 +72,26 @@ def preencher_formulario(dados):
     Automatiza o preenchimento do formulário com os dados fornecidos.
     """
     print("Você tem 5 segundos para clicar na janela do sistema...")
-    time.sleep(0.2)
+    time.sleep(5)  # Aumentei o tempo para 5 segundos para dar mais tempo ao usuário
 
     print("Iniciando o preenchimento automático. NÃO TOQUE NO MOUSE OU TECLADO.")
 
     try:
-        try:
-            janela = pyautogui.getWindowsWithTitle('NOTRE DAME INTERMEDICA SAUDE S A')[0]
-            if janela.isMinimized:
-                janela.restore()
-            janela.activate()
-            window_x, window_y = janela.topleft
-        except IndexError:
-            print("Janela do NOTRE DAME não encontrada. Certifique-se de que está aberta.")
-            return
+        # Tenta encontrar a janela do sistema de forma mais flexível
+        janelas = pyautogui.getWindowsWithTitle('')
+        janela_encontrada = None
+        for janela in janelas:
+            if 'NOTRE DAME' in janela.title.upper() or 'INTERMEDICA' in janela.title.upper():
+                janela_encontrada = janela
+                break
+
+        if not janela_encontrada:
+            raise IndexError("A janela do sistema não foi encontrada.")
+
+        if janela_encontrada.isMinimized:
+            janela_encontrada.restore()
+        janela_encontrada.activate()
+        window_x, window_y = janela_encontrada.topleft
 
         pyautogui.click(x=window_x + 33, y=window_y + 276)
         pyautogui.write("N")
@@ -105,7 +111,7 @@ def preencher_formulario(dados):
         pyautogui.click(x=window_x + 755, y=window_y + 311)
         pyautogui.hotkey('ctrl', 'a')
         pyautogui.hotkey('ctrl', 'c')
-        time.sleep(0.1) #Tempo para copiar a informação
+        time.sleep(0.1)  # Tempo para copiar a informação
         texto_cid = pyperclip.paste()
         pyautogui.press("tab")
 
@@ -159,8 +165,11 @@ def preencher_formulario(dados):
         print("Preenchimento concluído com sucesso!")
         time.sleep(2)
 
+    except IndexError as e:
+        print(f"ERRO: {e}")
+        print("Certifique-se de que a janela do sistema 'NOTRE DAME INTERMEDICA SAUDE S A' está aberta.")
     except Exception as e:
-        print(f"Ocorreu um erro durante a automação: {e}")
+        print(f"Ocorreu um erro inesperado durante a automação: {e}")
         print("Verifique se a janela do sistema está ativa.")
 
 
