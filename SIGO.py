@@ -25,6 +25,20 @@ def obter_dados_do_terminal():
     }
 
 
+def selecionar_aba_secundaria():
+    """
+    Seleciona a aba "Aut. Procedimento" antes de iniciar a automação.
+    As coordenadas foram fornecidas pelo usuário.
+    """
+    print("Selecionando a aba correta do sistema...")
+    # Clica na aba principal T22A3S (coordenada da aba no sistema)
+    pyautogui.click(x=294, y=1008)
+    time.sleep(1) # Pequena pausa para o sistema carregar a aba
+    # Clica na aba secundária "Aut. Procedimento" (coordenada da aba secundária)
+    pyautogui.click(x=691, y=156)
+    time.sleep(1) # Pequena pausa para o sistema carregar a nova tela
+
+
 def preencher_formulario(dados):
     """
     Automatiza o preenchimento do formulário com os dados fornecidos.
@@ -137,4 +151,5 @@ if __name__ == "__main__":
     dados_preencher = obter_dados_do_terminal()
 
     # 2. Inicia o preenchimento automático
+    selecionar_aba_secundaria()
     preencher_formulario(dados_preencher)
